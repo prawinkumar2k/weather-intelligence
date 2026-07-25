@@ -36,6 +36,7 @@ function dateLabel(dateValue) {
 async function fetchGeocoding(city) {
   const normalizedQuery = city.toLowerCase();
   const aliases = {
+    // Historical/alternate city names
     bangalore: "Bengaluru",
     bombay: "Mumbai",
     calcutta: "Kolkata",
@@ -45,6 +46,7 @@ async function fetchGeocoding(city) {
     cochin: "Kochi",
     trivandrum: "Thiruvananthapuram",
     thiruvananthapuram: "Thiruvananthapuram",
+    // Major cities and districts
     tirupati: "Tirupati",
     trichy: "Tiruchirapalli",
     hyderabad: "Hyderabad",
@@ -68,6 +70,29 @@ async function fetchGeocoding(city) {
     agra: "Agra",
     guwahati: "Guwahati",
     srinagar: "Srinagar",
+    // State names → State capital/major city
+    maharashtra: "Mumbai",
+    "tamil nadu": "Chennai",
+    karnataka: "Bengaluru",
+    telangana: "Hyderabad",
+    "andhra pradesh": "Visakhapatnam",
+    gujarat: "Ahmedabad",
+    "madhya pradesh": "Bhopal",
+    "uttar pradesh": "Lucknow",
+    rajasthan: "Jaipur",
+    punjab: "Chandigarh",
+    haryana: "Gurugram",
+    bihar: "Patna",
+    jharkhand: "Ranchi",
+    odisha: "Bhubaneswar",
+    assam: "Guwahati",
+    "jammu and kashmir": "Srinagar",
+    "j&k": "Srinagar",
+    "himachal pradesh": "Shimla",
+    uttarakhand: "Dehradun",
+    goa: "Panaji",
+    kerala: "Kochi",
+    "west bengal": "Kolkata",
   };
   const searchTerm = aliases[normalizedQuery] ?? city;
 
