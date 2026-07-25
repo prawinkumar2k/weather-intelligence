@@ -34,7 +34,16 @@ function dateLabel(dateValue) {
 }
 
 async function fetchGeocoding(city) {
-  const url = `${GEOCODING_BASE_URL}?name=${encodeURIComponent(city)}&count=1&language=en&format=json`;
+  const normalizedQuery = city.toLowerCase();
+  const aliases = {
+    bangalore: "Bengaluru",
+    bombay: "Mumbai",
+    calcutta: "Kolkata",
+    madras: "Chennai",
+  };
+  const searchTerm = aliases[normalizedQuery] ?? city;
+
+  const url = `${GEOCODING_BASE_URL}?name=${encodeURIComponent(searchTerm)}&count=10&language=en&format=json`;
   const response = await fetch(url);
 
   if (!response.ok) {
@@ -42,7 +51,22 @@ async function fetchGeocoding(city) {
   }
 
   const data = await response.json();
-  const location = data?.results?.[0];
+  const candidates = Array.isArray(data?.results) ? data.results : [];
+  const ranked = candidates
+    .map((item) => {
+      const name = String(item?.name ?? "").toLowerCase();
+      const exactName = name === normalizedQuery ? 1 : 0;
+      const startsWithName = !exactName && name.startsWith(normalizedQuery) ? 1 : 0;
+      const population = Number(item?.population ?? 0);
+
+      return {
+        item,
+        score: exactName * 1000000000 + startsWithName * 500000000 + population,
+      };
+    })
+    .sort((a, b) => b.score - a.score);
+
+  const location = ranked[0]?.item;
   if (!location) {
     return null;
   }
