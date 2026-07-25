@@ -202,7 +202,7 @@ function Hero({ onSearch }) {
           <span>Popular:</span>
           {popularCities.map((city) => (
             <button
-              onClick={() => onSearch(city.name)}
+              onClick={() => onSearch(city)}
               key={city}
               className="rounded-full bg-white px-3 py-1.5 font-medium text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:text-blue-600"
             >
