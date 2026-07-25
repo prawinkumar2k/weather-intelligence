@@ -46,10 +46,11 @@ Local URL:
 
 Use the connected GitHub repository in Cloudflare Pages and configure:
 
-- Framework preset: None
+- Framework preset: Vite
 - Build command: `npm run build`
 - Build output directory: `dist`
 - Root directory: `/` (repository root)
+- Node version: `20`
 
 Cloudflare Pages Functions are in:
 - `functions/api/weather.js`
@@ -67,9 +68,9 @@ The frontend calls:
 Capture screenshots or short screen recording for:
 
 1. App opened from Cloudflare Pages URL (`*.pages.dev`)
-2. Successful search with City 1 (example: London)
-3. Successful search with City 2 (example: Tokyo)
-4. Invalid city search (example: `abcxyzinvalid`) showing error state
+2. Successful search with City 1 (example: Chennai)
+3. Successful search with City 2 (example: Bangalore)
+4. Invalid city search (example: `InvalidCity987654`) showing error state
 5. Current weather details visible (temperature, condition, wind, humidity)
 6. 7-day forecast visible (day, max temp, min temp, weather)
 7. Recommendation cards visible (planning recommendation)

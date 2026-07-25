@@ -11,9 +11,9 @@ Use this checklist in order and tick each item before zipping your submission.
 
 ## B. Functional Validation (Mandatory)
 
-- [ ] Valid city search 1 works (example: London)
-- [ ] Valid city search 2 works (example: Tokyo)
-- [ ] Invalid city search shows error state (example: abcxyzinvalid)
+- [ ] Valid city search 1 works (example: Chennai)
+- [ ] Valid city search 2 works (example: Bangalore)
+- [ ] Invalid city search shows error state (example: InvalidCity987654)
 - [ ] Current weather shows temperature
 - [ ] Current weather shows condition
 - [ ] Current weather shows wind
