@@ -1,85 +1,175 @@
 # Weather Intelligence App
 
-A weather intelligence web app built with React + Vite. It uses public Open-Meteo APIs for city geocoding, current weather, and 7-day forecast.
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](#local-development)
+[![Frontend](https://img.shields.io/badge/frontend-React%20%2B%20Vite-61dafb)](#tech-stack)
+[![Deploy](https://img.shields.io/badge/deploy-Cloudflare%20Pages-orange)](#cloudflare-pages-deployment)
+[![API](https://img.shields.io/badge/api-Open--Meteo-blue)](#api-integration)
 
-## Assignment Coverage
+Weather Intelligence is a responsive weather web application that helps users search any city and instantly view current conditions, a 7-day forecast, and planning recommendations.
 
-This project includes:
-- Live city search using Open-Meteo geocoding API
-- Current weather and 7-day forecast from Open-Meteo forecast API
-- Invalid city handling with clear error state
-- Browser-accessible deployment support for Cloudflare Pages
-- Build configuration and deployment notes for evidence submission
+This project is built to satisfy the Level 2 app-building lifecycle: design, implementation, API integration, testing, deployment, and evidence-based submission.
+
+## Live Assignment Coverage
+
+### Functional Requirements
+
+- City search
+- Current weather: temperature, condition, wind, humidity
+- 7-day forecast: day, max/min temperature, weather condition
+- Weather recommendations
+- Invalid city and API error handling
+
+### Validation Scenarios
+
+- Valid city test: Chennai
+- Valid city test: Bangalore
+- Invalid city test: InvalidCity987654
+
+## Architecture
+
+```mermaid
+flowchart LR
+	U[User] --> FE[React Frontend]
+	FE --> API[/api/weather]
+	API --> GEO[Open-Meteo Geocoding API]
+	API --> FC[Open-Meteo Forecast API]
+	FC --> API
+	API --> FE
+```
+
+### Runtime Paths
+
+- Local development: Vite + Express route handling
+- Cloud deployment: Cloudflare Pages + Pages Functions
 
 ## Tech Stack
 
 - React 18
 - Vite 8
-- TailwindCSS 3
-- Express (local dev API integration)
-- Cloudflare Pages Functions (`functions/api/weather.js`)
+- JavaScript (JSX)
+- Tailwind CSS 3
+- Express 5 (local API orchestration)
+- Cloudflare Pages Functions
+- Open-Meteo APIs
 
-## Local Run
+## Project Structure
 
-Prerequisites:
-- Node.js 22+
-- pnpm
+```text
+weather-intelligence/
+├─ client/
+│  ├─ components/
+│  ├─ hooks/
+│  ├─ lib/
+│  ├─ pages/
+│  ├─ App.jsx
+│  └─ global.css
+├─ functions/
+│  └─ api/
+│     └─ weather.js
+├─ server/
+│  ├─ routes/
+│  │  ├─ demo.js
+│  │  └─ weather.js
+│  ├─ index.js
+│  └─ node-build.js
+├─ public/
+├─ package.json
+├─ vite.config.js
+├─ SUBMISSION_CHECKLIST.md
+└─ VIVA_SCRIPT.md
+```
 
-Commands:
+## Local Development
+
+### Prerequisites
+
+- Node.js 20+ (22 recommended)
+- npm or pnpm
+
+### Run
 
 ```bash
 npm install
 npm run dev
 ```
 
-Alternative with pnpm:
+App URL:
 
-```bash
-pnpm install
-pnpm dev
-```
-
-Local URL:
 - http://localhost:8080
 
-## Deployment (Cloudflare Pages)
+### Build
 
-Use the connected GitHub repository in Cloudflare Pages and configure:
+```bash
+npm run build
+```
 
-- Framework preset: Vite
-- Build command: `npm run build`
-- Build output directory: `dist`
-- Root directory: `/` (repository root)
-- Node version: `20`
+Build output:
 
-Cloudflare Pages Functions are in:
-- `functions/api/weather.js`
+- dist
 
-The frontend calls:
-- `/api/weather?city=<city-name>`
+## API Integration
 
-## API Sources
+### Open-Meteo Geocoding
 
-- Geocoding API: https://geocoding-api.open-meteo.com/v1/search
-- Forecast API: https://api.open-meteo.com/v1/forecast
+- Endpoint: https://geocoding-api.open-meteo.com/v1/search
+- Purpose: Convert city name to latitude/longitude
 
-## Validation Checklist (Evidence)
+### Open-Meteo Forecast
 
-Capture screenshots or short screen recording for:
+- Endpoint: https://api.open-meteo.com/v1/forecast
+- Purpose: Current weather + 7-day forecast data
 
-1. App opened from Cloudflare Pages URL (`*.pages.dev`)
-2. Successful search with City 1 (example: Chennai)
-3. Successful search with City 2 (example: Bangalore)
-4. Invalid city search (example: `InvalidCity987654`) showing error state
-5. Current weather details visible (temperature, condition, wind, humidity)
-6. 7-day forecast visible (day, max temp, min temp, weather)
-7. Recommendation cards visible (planning recommendation)
-8. Cloudflare Pages settings page showing connected GitHub repo, build command, and output directory
-9. Deployment success log in Cloudflare
-10. Repository page showing source code, config, and README
+### Frontend API Call
 
-## Notes
+- Route: /api/weather?city=<city-name>
 
-- This app uses only public weather data from Open-Meteo.
-- No private keys are required.
-- If API responses fail due to network issues, the UI shows an error and allows retry.
+## Cloudflare Pages Deployment
+
+Use these exact settings:
+
+| Setting | Value |
+|---|---|
+| Framework Preset | Vite |
+| Build Command | npm run build |
+| Build Output Directory | dist |
+| Root Directory | / |
+| Node Version | 20 |
+| Environment Variables | None |
+
+## Quick QA Checklist
+
+- Search Chennai and verify weather sections render
+- Search Bangalore and verify weather sections render
+- Search InvalidCity987654 and verify friendly error
+- Confirm no obvious browser console runtime errors
+- Check responsive behavior on desktop and mobile viewport
+
+## Evidence Checklist (For Submission)
+
+Capture screenshots of:
+
+1. GitHub repository home page
+2. README on GitHub
+3. Cloudflare build configuration
+4. Cloudflare successful deployment screen
+5. Live pages.dev URL/home page
+6. Chennai search result
+7. Bangalore search result
+8. Invalid city result
+
+## Security and Data Notes
+
+- Uses only public Open-Meteo APIs
+- No private API keys required
+- No Firebase, no Gemini API, no Google Cloud APIs
+- Invalid input and failed API calls are handled with user-friendly errors
+
+## Documentation Helpers
+
+- Submission checklist: SUBMISSION_CHECKLIST.md
+- Viva/demo script: VIVA_SCRIPT.md
+
+## License
+
+This project currently has no explicit license file.
+For open-source usage, add an MIT License file.
