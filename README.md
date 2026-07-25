@@ -1,56 +1,151 @@
-# Weather Intelligence App
+# Weather Intelligence Platform
 
-[![Build](https://img.shields.io/badge/build-passing-brightgreen)](#local-development)
-[![Frontend](https://img.shields.io/badge/frontend-React%20%2B%20Vite-61dafb)](#tech-stack)
-[![Deploy](https://img.shields.io/badge/deploy-Cloudflare%20Pages-orange)](#cloudflare-pages-deployment)
-[![API](https://img.shields.io/badge/api-Open--Meteo-blue)](#api-integration)
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
+![Frontend](https://img.shields.io/badge/frontend-React%20%2B%20Vite-61dafb)
+![Deploy](https://img.shields.io/badge/deploy-Cloudflare%20Pages-orange)
+![API](https://img.shields.io/badge/api-Open--Meteo-blue)
 
-Weather Intelligence is a responsive weather web application that helps users search any city and instantly view current conditions, a 7-day forecast, and planning recommendations.
+A production-style weather intelligence application built with React, Vite, and Open-Meteo APIs. The app lets users search cities, view current weather, inspect 7-day forecast trends, and receive practical planning recommendations.
 
-This project is built to satisfy the Level 2 app-building lifecycle: design, implementation, API integration, testing, deployment, and evidence-based submission.
+## Table of Contents
 
-## Live Assignment Coverage
+- Overview
+- Architecture
+- Application Flow
+- Features
+- Tech Stack
+- Project Structure
+- API Design
+- Recommendation Rules
+- Setup and Run
+- Cloudflare Deployment
+- Security Notes
+- Scalability and Performance
+- QA and Validation
+- Submission Evidence Checklist
+- Optimization Report
+- Contribution Guide
+- License
 
-### Functional Requirements
+## Overview
 
-- City search
-- Current weather: temperature, condition, wind, humidity
-- 7-day forecast: day, max/min temperature, weather condition
-- Weather recommendations
-- Invalid city and API error handling
+### Problem Statement
+Users need quick and clear weather insights for daily planning, but many weather tools are cluttered, key-gated, or not assignment friendly.
 
-### Validation Scenarios
+### Solution
+This project provides:
+- Fast city-based search
+- Current conditions view
+- 7-day forecast cards
+- Rule-driven recommendations
+- Friendly invalid city and network error states
 
-- Valid city test: Chennai
-- Valid city test: Bangalore
-- Invalid city test: InvalidCity987654
+### Target Users
+- Learners completing app deployment assignments
+- Users planning daily activities using weather conditions
+- Recruiters evaluating frontend + API + deployment skills
 
 ## Architecture
 
+### High-Level Architecture Diagram
+
 ```mermaid
 flowchart LR
-  U["User"] --> FE["React Frontend"]
-  FE --> API["/api/weather"]
-  API --> GEO["Open-Meteo Geocoding API"]
-  API --> FC["Open-Meteo Forecast API"]
-  FC --> API
-  API --> FE
+  A[User Browser] --> B[React Frontend]
+  B --> C[GET /api/weather]
+  C --> D[Cloudflare Pages Function]
+  C --> E[Express API in Local Dev]
+  D --> F[Open-Meteo Geocoding API]
+  D --> G[Open-Meteo Forecast API]
+  E --> F
+  E --> G
+  G --> D
+  D --> B
 ```
 
-### Runtime Paths
+### Architecture Style
+- Client-server, layered architecture
+- SPA frontend with serverless API adapter for deployment
+- Stateless weather requests
 
-- Local development: Vite + Express route handling
-- Cloud deployment: Cloudflare Pages + Pages Functions
+### Runtime Modes
+- Local mode: Vite dev server + Express middleware route
+- Cloud mode: Cloudflare Pages + Pages Functions
+
+## Application Flow
+
+### Functional Flowchart
+
+```mermaid
+flowchart TD
+  S[Start] --> U[User enters city]
+  U --> R[Request /api/weather]
+  R --> G[Geocode city]
+  G -->|Found| F[Fetch forecast]
+  G -->|Not Found| E[Show error state]
+  F --> N[Normalize response]
+  N --> V[Render current weather]
+  V --> W[Render 7-day forecast]
+  W --> X[Render recommendations]
+```
+
+### Sequence Diagram
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant UI as Frontend UI
+  participant API as API Layer
+  participant Geo as Open-Meteo Geocoding
+  participant Fc as Open-Meteo Forecast
+
+  User->>UI: Search city
+  UI->>API: GET /api/weather?city=...
+  API->>Geo: Resolve latitude/longitude
+  Geo-->>API: City coordinates
+  API->>Fc: Request current + daily forecast
+  Fc-->>API: Weather payload
+  API-->>UI: Normalized weather response
+  UI-->>User: Weather cards + recommendations
+```
+
+## Features
+
+### Core Features
+- City search
+- Current weather details:
+  - Temperature
+  - Weather condition
+  - Wind speed
+  - Humidity
+  - Pressure
+  - Sunrise and sunset
+- 7-day forecast:
+  - Day label
+  - Max/min temperatures
+  - Weather condition
+  - Rain probability
+- Recommendation cards
+- Invalid city handling
+- Network failure handling
+- Responsive layout
+
+### Assignment Validation Cases
+- Valid city: Chennai
+- Valid city: Bangalore
+- Invalid city: InvalidCity987654
 
 ## Tech Stack
 
-- React 18
-- Vite 8
-- JavaScript (JSX)
-- Tailwind CSS 3
-- Express 5 (local API orchestration)
-- Cloudflare Pages Functions
-- Open-Meteo APIs
+| Layer | Technology | Purpose |
+|---|---|---|
+| Frontend | React 18 | Component-based UI |
+| Build Tool | Vite 8 | Fast development and production builds |
+| Styling | Tailwind CSS 3 | Utility-first responsive UI |
+| Icons | Lucide React | Weather and UX iconography |
+| Local API | Express 5 | Local development API integration |
+| Cloud API Runtime | Cloudflare Pages Functions | Serverless API endpoint in deployment |
+| External Data | Open-Meteo APIs | Geocoding and forecast weather data |
 
 ## Project Structure
 
@@ -58,9 +153,12 @@ flowchart LR
 weather-intelligence/
 ├─ client/
 │  ├─ components/
+│  │  └─ ui/
 │  ├─ hooks/
 │  ├─ lib/
 │  ├─ pages/
+│  │  ├─ Index.jsx
+│  │  └─ NotFound.jsx
 │  ├─ App.jsx
 │  └─ global.css
 ├─ functions/
@@ -72,6 +170,9 @@ weather-intelligence/
 │  │  └─ weather.js
 │  ├─ index.js
 │  └─ node-build.js
+├─ netlify/
+│  └─ functions/
+│     └─ api.js
 ├─ public/
 ├─ package.json
 ├─ vite.config.js
@@ -79,53 +180,108 @@ weather-intelligence/
 └─ VIVA_SCRIPT.md
 ```
 
-## Local Development
+## API Design
+
+### Main Endpoint
+
+```http
+GET /api/weather?city=<city-name>
+```
+
+### Internal API Steps
+1. Resolve city to coordinates via Open-Meteo Geocoding API.
+2. Request current and 7-day data via Open-Meteo Forecast API.
+3. Normalize payload into frontend-friendly format.
+4. Return structured JSON.
+
+### Example Success Response (Simplified)
+
+```json
+{
+  "city": {
+    "name": "Chennai",
+    "country": "India",
+    "latitude": 13.08,
+    "longitude": 80.27,
+    "timezone": "Asia/Kolkata"
+  },
+  "current": {
+    "temperature": 29,
+    "condition": "Partly cloudy",
+    "windSpeed": 18,
+    "humidity": 74
+  },
+  "daily": [
+    {
+      "day": "Today",
+      "high": 33,
+      "low": 26,
+      "rainProbability": 66
+    }
+  ]
+}
+```
+
+### Error Responses
+
+```json
+{ "message": "Query parameter 'city' is required." }
+```
+
+```json
+{ "message": "City not found. Try a different city name." }
+```
+
+## Recommendation Rules
+
+Recommendations are generated from weather values:
+- High rain probability: carry umbrella
+- High UV: sun safety
+- Strong wind: caution for outdoor plans
+- Additional comfort hints from humidity/feels-like patterns
+
+## Setup and Run
 
 ### Prerequisites
+- Node.js 20 or newer
+- npm 10 or newer
 
-- Node.js 20+ (22 recommended)
-- npm or pnpm
-
-### Run
+### Installation
 
 ```bash
+git clone https://github.com/prawinkumar2k/weather-intelligence.git
+cd weather-intelligence
 npm install
+```
+
+### Development Run
+
+```bash
 npm run dev
 ```
 
-App URL:
-
+Local URL:
 - http://localhost:8080
 
-### Build
+### Production Build
 
 ```bash
 npm run build
 ```
 
-Build output:
+Expected output:
+- dist/
 
-- dist
+### Optional Local Production Server
 
-## API Integration
+```bash
+npm run build:server
+npm run start
+```
 
-### Open-Meteo Geocoding
+## Cloudflare Deployment
 
-- Endpoint: https://geocoding-api.open-meteo.com/v1/search
-- Purpose: Convert city name to latitude/longitude
-
-### Open-Meteo Forecast
-
-- Endpoint: https://api.open-meteo.com/v1/forecast
-- Purpose: Current weather + 7-day forecast data
-
-### Frontend API Call
-
-- Route: /api/weather?city=<city-name>
-
-## Cloudflare Pages Deployment
-
-Use these exact settings:
+Create a Cloudflare Pages project from GitHub and configure exactly:
 
 | Setting | Value |
 |---|---|
@@ -136,40 +292,103 @@ Use these exact settings:
 | Node Version | 20 |
 | Environment Variables | None |
 
-## Quick QA Checklist
+### Deployment Flow Diagram
 
-- Search Chennai and verify weather sections render
-- Search Bangalore and verify weather sections render
-- Search InvalidCity987654 and verify friendly error
-- Confirm no obvious browser console runtime errors
-- Check responsive behavior on desktop and mobile viewport
+```mermaid
+flowchart LR
+  Dev[Developer] --> GH[GitHub Repository]
+  GH --> CF[Cloudflare Pages Build]
+  CF --> Dist[dist Artifact]
+  Dist --> Edge[Cloudflare Edge Delivery]
+  Edge --> Fn[Pages Function /api/weather]
+  Fn --> OM[Open-Meteo APIs]
+```
 
-## Evidence Checklist (For Submission)
+## Security Notes
+
+### Current Security Posture
+- No private API keys required
+- No Firebase, no Gemini API, no Google Cloud APIs
+- Graceful user-facing error handling
+- Local secret files excluded from Git tracking
+
+### Not Implemented in Current Scope
+- Authentication and authorization
+- Rate limiting
+- WAF policy tuning
+- Persistent audit logging
+
+## Scalability and Performance
+
+### Current Strengths
+- Static frontend delivery via edge CDN
+- Stateless API requests
+- Simple, deterministic response normalization
+
+### Recommended Improvements
+- Request debouncing on search input
+- Short TTL edge caching for popular cities
+- Abort in-flight stale requests when user searches rapidly
+- Add automated lint/test CI gate before deploy
+
+## QA and Validation
+
+### Functional QA
+- Search Chennai: verify current + forecast + recommendations
+- Search Bangalore: verify current + forecast + recommendations
+- Search InvalidCity987654: verify friendly error state
+
+### UI QA
+- Desktop view
+- Mobile viewport view
+- No obvious runtime errors in browser console
+
+### Build QA
+
+```bash
+npm run build
+```
+
+Must complete successfully and generate dist output.
+
+## Submission Evidence Checklist
 
 Capture screenshots of:
-
 1. GitHub repository home page
-2. README on GitHub
+2. README displayed on GitHub
 3. Cloudflare build configuration
 4. Cloudflare successful deployment screen
-5. Live pages.dev URL/home page
+5. Live pages.dev home page
 6. Chennai search result
 7. Bangalore search result
 8. Invalid city result
 
-## Security and Data Notes
+Support docs in repository:
+- SUBMISSION_CHECKLIST.md
+- VIVA_SCRIPT.md
 
-- Uses only public Open-Meteo APIs
-- No private API keys required
-- No Firebase, no Gemini API, no Google Cloud APIs
-- Invalid input and failed API calls are handled with user-friendly errors
+## Optimization Report
 
-## Documentation Helpers
+### Improvements Already Applied
+- Geocoding ambiguity fix (Bangalore alias resolution)
+- Quick-search click handler bug fix
+- Cloudflare Pages function compatibility
+- README documentation uplift
 
-- Submission checklist: SUBMISSION_CHECKLIST.md
-- Viva/demo script: VIVA_SCRIPT.md
+### Recommended Next Refactors
+- Move weather business logic from page file into service and hook modules
+- Reduce unused UI primitives for leaner repository footprint
+- Add end-to-end smoke tests for deployment verification
+
+## Contribution Guide
+
+1. Fork repository
+2. Create a feature branch
+3. Make focused changes
+4. Validate with npm run build
+5. Open pull request with summary and screenshots if UI changes
 
 ## License
 
-This project currently has no explicit license file.
-For open-source usage, add an MIT License file.
+No license file is currently included.
+Recommended: add MIT License for open-source clarity.
