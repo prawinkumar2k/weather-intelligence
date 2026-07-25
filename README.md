@@ -29,12 +29,12 @@ This project is built to satisfy the Level 2 app-building lifecycle: design, imp
 
 ```mermaid
 flowchart LR
-	U[User] --> FE[React Frontend]
-	FE --> API[/api/weather]
-	API --> GEO[Open-Meteo Geocoding API]
-	API --> FC[Open-Meteo Forecast API]
-	FC --> API
-	API --> FE
+  U["User"] --> FE["React Frontend"]
+  FE --> API["/api/weather"]
+  API --> GEO["Open-Meteo Geocoding API"]
+  API --> FC["Open-Meteo Forecast API"]
+  FC --> API
+  API --> FE
 ```
 
 ### Runtime Paths
