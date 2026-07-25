@@ -118,13 +118,17 @@ function buildRecommendations(weather) {
 
 function Brand() {
   return (
-    <div className="flex items-center gap-3">
-      <div className="grid h-10 w-10 place-items-center rounded-[13px] bg-gradient-to-br from-blue-600 to-cyan-400 text-white shadow-lg shadow-blue-200">
-        <CloudSun size={23} strokeWidth={2.2} />
+    <div className="flex items-center gap-2.5">
+      <div className="relative h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 via-cyan-400 to-blue-600 shadow-lg shadow-blue-300/40 flex items-center justify-center group hover:shadow-blue-400/60 transition-shadow">
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
+        <CloudSun size={24} className="text-white drop-shadow-md" strokeWidth={2.3} />
       </div>
-      <span className="text-[15px] font-bold tracking-tight text-slate-900">
-        Weather<span className="text-blue-600">IQ</span>
-      </span>
+      <div className="flex flex-col -gap-1">
+        <span className="text-[15px] font-bold tracking-tight text-slate-900 leading-none">
+          Weather<span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Intelligence</span>
+        </span>
+        <span className="text-[10px] font-medium text-slate-400 tracking-widest uppercase">Real-time Forecast</span>
+      </div>
     </div>
   );
 }
