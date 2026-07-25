@@ -24,4 +24,8 @@ dist-ssr
 *.sw?
 
 .config/
-!.env
+
+# Local secrets and machine-specific artifacts
+.env
+.env.*
+.jetro/
